@@ -1,5 +1,4 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
-
+node_modules
 # Compiled output
 /dist
 /tmp
@@ -8,6 +7,7 @@
 
 # Node
 /node_modules
+/tools/examples/shared/node_modules
 npm-debug.log
 yarn-error.log
 
@@ -30,12 +30,20 @@ yarn-error.log
 
 # Miscellaneous
 /.angular/cache
+/.firebase/
 .sass-cache/
 /connect.lock
 /coverage
 /libpeerconnection.log
+firebase-debug.log
 testem.log
 /typings
+
+# e2e
+protractor-results*.txt
+
+# Example playground
+content/example-playground
 
 # System files
 .DS_Store

@@ -5,33 +5,41 @@
               <div class="row justify-content-center my-auto">
                   <div class="col-md-8 col-10 my-5">
                       <h3 class="mb-5 text-center heading">FNZ Group</h3>
-
                       <h6 class="msg-info">Please login to your account</h6>
-
-                      <div class="form-group">
-                          <label class="form-control-label text-muted">Username</label>
-                          <input type="text" id="email" name="email" placeholder="Username" class="form-control">
-                      </div>
-
-                      <div class="form-group">
-                          <label class="form-control-label text-muted">Password</label>
-                          <input type="password" id="psw" name="psw" placeholder="Password" class="form-control">
-                      </div>
-
-                      <div class="row justify-content-center my-3 px-3">
-                          <button class="btn-block btn-color">Login to FNZ</button>
-                      </div>
-
-                      <div class="row justify-content-center my-2">
-                          <a href="#"><small class="text-muted">Forgot Password?</small></a>
-                      </div>
+                        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                            <div class="form-group">
+                                <label class="form-control-label text-muted" for="username">Username</label>
+                                <input type="text" id="email" placeholder="Username" class="form-control" formControlName="username" required [ngClass]="{'is-invalid':submitted && f['username'].errors}">
+                            </div>
+                            <div *ngIf="f['username'].errors && submitted" class="invalid-feedback">Username is required</div>
+                            <div class="form-group">
+                                <label class="form-control-label text-muted" for="password">Password</label>
+                                <input type="password" id="psw" formControlName="password" placeholder="Password" class="form-control" required minlength="6" [ngClass]="{'is-invalid':submitted && f['password'].errors}">
+                            </div>
+                            <div *ngIf="f['password'].errors && submitted" class="invalid-feedback">
+                                <div *ngIf="f['password'].errors['required']">Password is required</div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row justify-content-center my-3 px-3">
+                                    <button class="btn btn-block btn-color">Login to FNZ</button>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center my-2">
+                                <a href="#"><small class="text-muted">Forgot Password?</small></a>
+                            </div>
+                            <div class="form-group">
+                                <div *ngIf="submitted" class="alert alert-danger" role="alert">
+                                    Login failed: {{error}}
+                                </div>
+                            </div>
+                        </form>
                   </div>
               </div>
           </div>
           <div class="card card2">
               <div class="my-auto mx-md-5 px-md-5 right">
-                  <h3 class="text-white">We are more than just a company</h3>
-                  <small class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</small>
+                  <h3 class="text-white">We are wealth's everyone's growth platform</h3>
+                  <small class="text-white">FNZ is the global platform opening up wealth. We partner with the entire industry to make wealth management accessible to more people. </small>
               </div>
           </div>
       </div>

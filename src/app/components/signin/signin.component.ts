@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
-import { TokenStorageService } from 'src/app/services/token-storage.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-signin',
@@ -8,43 +10,44 @@ import { TokenStorageService } from 'src/app/services/token-storage.service';
   styleUrls: ['./signin.component.css']
 })
 export class SigninComponent implements OnInit {
-  form: any = {
-    username: null,
-    pssword: null
-  };
-  isLoggedIn = false;
-  isLoginFailed = false;
-  errorMessage = '';
-  roles: string[] = [];
-  constructor(private authService: AuthService, private tokenStorageService: TokenStorageService){}
-
-  ngOnInit(): void {
-    if(this.tokenStorageService.getToken()){
-      this.isLoggedIn = true;
-      this.roles = this.tokenStorageService.getUser().roles;
-    }
-  }
-
-  onSubmit(): void{
-    const {username, password} = this.form;
-    this.authService.login(username, password).subscribe({
-      next: data =>{
-        this.tokenStorageService.saveUser(data);
-        this.isLoginFailed = false;
-        this.isLoggedIn = true;
-        this.roles = this.tokenStorageService.getUser().roles;
-        this.reloadPage();
-      },
-      error: err =>{
-        this.errorMessage = err.errorMessage;
-        this.isLoginFailed = true;
+  loginForm!: FormGroup;
+  loading = false;
+  submitted = false;
+  error = '';
+  user: User = new User;
+  constructor(private authService: AuthService,
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute){
+      if(this.authService.userValue){
+        this.router.navigate(['/Home']);
       }
-    });
+    }
 
+  ngOnInit() {
+   this.loginForm = this.formBuilder.group({
+    username: ['', Validators.required],
+    password: ['', Validators.required]
+   });
   }
 
-  reloadPage(): void{
-    window.location.reload();
+  get f(){ return this.loginForm.controls; }
+
+  onSubmit(){
+    this.submitted = true;
+    if(this.loginForm.invalid){
+      return;
+    }
+    this.error='';
+    this.loading=true;
+    this.authService.login(this.f['username'].value, this.f['password'].value)
+      .subscribe(response=>{
+        this.user = response;
+        console.log(this.user);
+          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/Home';
+          this.router.navigate([returnUrl]);
+      })
+      }
   }
-  }
+
 
